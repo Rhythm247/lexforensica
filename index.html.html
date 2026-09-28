@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LexForensica: From Section to Judgment</title>
+<style>
+:root{--bg:#f6f4ef;--ink:#1b2430;--mut:#5b6572;--card:#fff;--line:#d9d5ca;--acc:#1f4b6e;--acc2:#8a2f3c;--soft:#e7eef4;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12181f;--ink:#e8e6df;--mut:#9aa5b1;--card:#1a222b;--line:#2c3743;--acc:#7fb3d9;--acc2:#e08a97;--soft:#20303d}}
+:root[data-theme="dark"]{--bg:#12181f;--ink:#e8e6df;--mut:#9aa5b1;--card:#1a222b;--line:#2c3743;--acc:#7fb3d9;--acc2:#e08a97;--soft:#20303d}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Segoe UI",system-ui,sans-serif}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;line-height:1.2;margin:0 0 .5em}
+h1{font-size:clamp(2rem,6vw,3.4rem)}h2{font-size:1.8rem}h3{font-size:1.15rem}
+a{color:var(--acc)}
+.w{max-width:1040px;margin:0 auto;padding:0 20px}
+header{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);border-bottom:1px solid var(--line);z-index:5}
+nav{display:flex;align-items:center;gap:18px;padding:12px 20px;max-width:1040px;margin:0 auto;overflow-x:auto;white-space:nowrap}
+nav b{font-family:Georgia,serif;font-size:1.2rem;margin-right:auto;color:var(--acc)}
+nav a{text-decoration:none;color:var(--ink);font-size:.95rem}
+section{padding:56px 0;border-bottom:1px solid var(--line)}
+.hero{padding:72px 0 48px}
+.hero p{max-width:60ch;color:var(--mut);font-size:1.1rem}
+.search{display:flex;gap:8px;margin:24px 0 8px;max-width:640px}
+input[type=search]{flex:1;padding:14px 16px;font-size:1rem;border:2px solid var(--acc);border-radius:6px;background:var(--card);color:var(--ink);min-width:0}
+button,.chip{font:inherit;cursor:pointer;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--acc2);outline-offset:2px}
+.on{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.res{display:grid;gap:10px;margin-top:14px}
+.r{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--acc);padding:12px 16px;border-radius:6px}
+.r.case{border-left-color:var(--acc2)}
+.r small{color:var(--mut)}
+.chain{display:flex;flex-wrap:wrap;gap:0;margin:28px 0}
+.chain button{border-radius:0;border-right:0;padding:14px 16px;font-weight:600}
+.chain button:first-child{border-radius:6px 0 0 6px}.chain button:last-child{border-radius:0 6px 6px 0;border-right:1px solid var(--line)}
+.chain button.on{border-color:var(--acc)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:20px;min-height:110px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px}
+.tag{display:inline-block;font-size:.8rem;padding:2px 8px;border-radius:99px;background:var(--soft);color:var(--acc);margin-right:6px}
+.tag.warn{background:transparent;border:1px dashed var(--acc2);color:var(--acc2)}
+.tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:520px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mut);font-weight:600;font-size:.9rem}
+.steps{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0}
+.steps span{background:var(--soft);padding:6px 12px;border-radius:99px;font-size:.9rem}
+.steps span.d{background:var(--acc);color:var(--bg)}
+.tl{border-left:3px solid var(--acc);margin:10px 0 0 8px;padding-left:20px}
+.tl div{margin-bottom:14px}
+footer{padding:36px 0;color:var(--mut);font-size:.9rem}
+</style>
+</head>
+<body>
+<header><nav aria-label="Main"><b>LexForensica</b><a href="#explore">Explore</a><a href="#section">Section page</a><a href="#mapping">Law mapping</a><a href="#forensic">Forensic hub</a><a href="#sources">Sources</a><a href="#roadmap">Roadmap</a></nav></header>
+
+<main>
+<section class="hero"><div class="w">
+<h1>From section to judgment, in one connected research path.</h1>
+<p>Search a provision of the BNS, BSA or BNSS. See its plain-language meaning, the cases that interpret it, the old-law equivalent, its forensic relevance and the primary source, all linked.</p>
+<div class="search"><input id="q" type="search" placeholder="Try: electronic evidence, dying declaration, murder" aria-label="Search"><button id="clr">Clear</button></div>
+<div class="chips" id="f"></div>
+<div class="res" id="res" aria-live="polite"></div>
+</div></section>
+
+<section id="explore"><div class="w">
+<h2>The research chain</h2>
+<p style="color:var(--mut)">Every record connects to the next. Select a step.</p>
+<div class="chain" id="chain"></div>
+<div class="panel" id="chainp"></div>
+</div></section>
+
+<section id="section"><div class="w">
+<h2>Section page (sample record)</h2>
+<div class="tabs"><button class="on" data-v="s">Student view</button><button data-v="r">Research view</button></div>
+<div class="box" id="sec"></div>
+</div></section>
+
+<section id="mapping"><div class="w">
+<h2>Old law to new law</h2>
+<p style="color:var(--mut)">Numbers alone are not enough. Each mapping links to the case law that followed.</p>
+<div class="tabs" id="mt"></div>
+<div class="scroll"><table><thead><tr><th>Old provision</th><th>New provision</th><th>Subject</th></tr></thead><tbody id="mb"></tbody></table></div>
+</div></section>
+
+<section id="forensic"><div class="w">
+<h2>Forensic hub</h2>
+<p style="color:var(--mut)">Forensic science → evidence → legal provision → judicial treatment → case law.</p>
+<div class="grid" id="fg"></div>
+<h3 style="margin-top:32px">Case development timeline: electronic evidence</h3>
+<div class="tl">
+<div><b>2014</b>: Anvar P.V. v. P.K. Basheer. A certificate is mandatory for electronic records.</div>
+<div><b>2020</b>: Arjun Panditrao Khotkar. Reaffirms the certificate requirement, clarifies when it may be produced.</div>
+<div><b>2023</b>: BSA replaces the Evidence Act; section 63 carries the rule forward.</div>
+</div>
+</div></section>
+
+<section id="sources"><div class="w">
+<h2>Sources and verification</h2>
+<p style="color:var(--mut)">No record is published without an attached primary source.</p>
+<div class="steps" id="wf"></div>
+<div class="grid">
+<div class="box"><h3>Primary sources first</h3><p>India Code, the Gazette of India, Supreme Court and High Court judgment portals, government forensic manuals.</p></div>
+<div class="box"><h3>Every record shows</h3><p>Authority, citation, original source, date, verification status, last review and reviewer.</p></div>
+<div class="box"><h3>Link health</h3><p>A monthly check flags dead or redirected source links.</p></div>
+</div>
+</div></section>
+
+<section id="roadmap"><div class="w">
+<h2>Build roadmap</h2>
+<div class="grid" id="rm"></div>
+</div></section>
+</main>
+
+<footer><div class="w"><span class="tag warn">Demo content</span> Sample records on this page illustrate the structure and are not yet verified against primary sources. LexForensica is for education and research, not legal advice.</div></footer>
+
+<script>
+const D=[
+{t:"sec",n:"BSA s.63",h:"Admissibility of electronic records",k:"electronic evidence digital record certificate",o:"Evidence Act s.65B"},
+{t:"sec",n:"BSA s.26",h:"Statements by a person who cannot be called as a witness (incl. dying declaration)",k:"dying declaration",o:"Evidence Act s.32"},
+{t:"sec",n:"BNS s.103",h:"Punishment for murder",k:"murder homicide",o:"IPC s.302"},
+{t:"sec",n:"BNSS s.176",h:"Forensic expert visit to crime scene for serious offences",k:"forensic expert crime scene investigation",o:"New provision"},
+{t:"case",n:"Anvar P.V. v. P.K. Basheer",h:"(2014) 10 SCC 473, Supreme Court",k:"electronic evidence certificate"},
+{t:"case",n:"Arjun Panditrao Khotkar v. Kailash Kushanrao Gorantyal",h:"(2020) 7 SCC 1, Supreme Court",k:"electronic evidence certificate"},
+{t:"case",n:"Khushal Rao v. State of Bombay",h:"AIR 1958 SC 22, Supreme Court",k:"dying declaration"},
+{t:"topic",n:"Electronic evidence",h:"Sections, cases and digital forensics in one place",k:"electronic digital"},
+{t:"topic",n:"Dying declaration",h:"Conditions, weight and corroboration",k:"dying declaration"}];
+let type="all";
+const f=document.getElementById("f"),res=document.getElementById("res"),q=document.getElementById("q");
+["all","sec","case","topic"].forEach(x=>{const b=document.createElement("button");b.className="chip"+(x=="all"?" on":"");b.textContent={all:"All",sec:"Sections",case:"Cases",topic:"Topics"}[x];b.onclick=()=>{type=x;[...f.children].forEach(c=>c.classList.remove("on"));b.classList.add("on");go()};f.appendChild(b)});
+function go(){const s=q.value.trim().toLowerCase();
+const r=D.filter(d=>(type=="all"||d.t==type)&&(!s||(d.n+d.h+d.k).toLowerCase().includes(s)));
+res.innerHTML=r.length?r.map(d=>`<div class="r ${d.t=="case"?"case":""}"><b>${d.n}</b><br>${d.h}<br><small>${d.t}${d.o?" · replaces "+d.o:""}</small></div>`).join(""):`<div class="r">No results. Try "electronic evidence" or clear the filters.</div>`}
+q.oninput=go;document.getElementById("clr").onclick=()=>{q.value="";go()};go();
+
+const C=[["Section","The statutory text with its plain-language meaning, keywords and old-law equivalent."],["Concept","The legal idea the section expresses, shared across sections through topics."],["Case","A structured record: facts, issues, provisions, judgment, ratio and source."],["Principle","The rule the court laid down, linked to every case that applies it."],["Later cases","Cases that reaffirm, distinguish or overrule the principle."],["Forensic use","How the evidence type (DNA, digital, toxicology) is treated in law."],["Source","The official judgment or gazette, with verification status."]];
+const ch=document.getElementById("chain"),cp=document.getElementById("chainp");
+C.forEach((c,i)=>{const b=document.createElement("button");b.textContent=c[0];b.onclick=()=>{[...ch.children].forEach(x=>x.classList.remove("on"));b.classList.add("on");cp.innerHTML=`<h3>${c[0]}</h3><p>${c[1]}</p>`};ch.appendChild(b);if(!i)b.click()});
+
+const S={s:`<h3>BSA section 63: Electronic records</h3><p><b>What is it?</b> The rule for when emails, chats, CCTV footage and other digital records can be used as evidence.</p><p><b>Key points:</b> a certificate is needed; it must identify the record and the device; it links the record to a responsible person.</p><p><b>Important cases:</b> Anvar P.V. (2014); Arjun Panditrao Khotkar (2020).</p>`,
+r:`<h3>BSA section 63</h3><p><span class="tag">Old: Evidence Act s.65B</span><span class="tag">Topic: Electronic evidence</span><span class="tag warn">Status: demo, unverified</span></p><p><b>Statutory text:</b> attached from India Code in the live record.</p><p><b>Issues:</b> Is the certificate mandatory? At what stage may it be produced?</p><p><b>Ratio:</b> Anvar P.V. required the certificate; Arjun Panditrao Khotkar reaffirmed it and addressed timing.</p><p><b>Forensic relevance:</b> hash values, imaging and chain of custody for digital devices.</p><p><b>Source:</b> India Code; Supreme Court judgment portal. <b>Reviewer:</b> pending.</p>`};
+const sec=document.getElementById("sec");sec.innerHTML=S.s;
+document.querySelectorAll("[data-v]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-v]").forEach(x=>x.classList.remove("on"));b.classList.add("on");sec.innerHTML=S[b.dataset.v]});
+
+const M={"IPC → BNS":[["IPC 302","BNS 103","Punishment for murder"],["IPC 300","BNS 101","Murder defined"],["IPC 420","BNS 318","Cheating"]],"CrPC → BNSS":[["CrPC 41","BNSS 35","Arrest without warrant"],["CrPC 154","BNSS 173","FIR"],["CrPC 164","BNSS 183","Recording of confessions and statements"]],"Evidence Act → BSA":[["Evid. Act 32","BSA 26","Statements of persons who cannot be called"],["Evid. Act 45","BSA 39","Expert opinion"],["Evid. Act 65B","BSA 63","Electronic records"]]};
+const mt=document.getElementById("mt"),mb=document.getElementById("mb");
+Object.keys(M).forEach((k,i)=>{const b=document.createElement("button");b.textContent=k;b.onclick=()=>{[...mt.children].forEach(x=>x.classList.remove("on"));b.classList.add("on");mb.innerHTML=M[k].map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("")};mt.appendChild(b);if(!i)b.click()});
+
+document.getElementById("fg").innerHTML=[["DNA","Collection, chain of custody and admissibility of DNA profiles."],["Fingerprints","Expert opinion and comparison evidence."],["Toxicology","Medical and chemical evidence in poisoning and death cases."],["Ballistics","Firearm and projectile examination as expert evidence."],["Digital forensics","Imaging, hashing and the electronic records certificate."],["Chain of custody","How an exhibit is tracked from scene to court."]].map(x=>`<div class="box"><h3>${x[0]}</h3><p>${x[1]}</p></div>`).join("");
+
+document.getElementById("wf").innerHTML=["Draft","Researched","Source attached","Source verified","Editor review","Published"].map((x,i)=>`<span class="${i<4?"d":""}">${x}</span>`).join("");
+document.getElementById("rm").innerHTML=[["Now","System architecture, entity model, sitemap"],["Next","CMS, editorial workflow, core repository"],["Then","Search, mappings, timelines, research workspace"],["Later","Learning layer, AI assistant, UK, USA and UAE"]].map(x=>`<div class="box"><h3>${x[0]}</h3><p>${x[1]}</p></div>`).join("");
+</script>
+</body>
+</html>
